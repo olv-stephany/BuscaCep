@@ -13,7 +13,21 @@ public class BuscaCep{
         System.out.print("CEP: ");
         String cepDigitado = scanner.nextLine();
 
-        String url = "https://brasilapi.com.br/api/cep/v2/" + cepDigitado;
+        System.out.println("\n");
+        String url = "https://brasilapi.com.br/api/cep/v2/";
+        cepDigitado = cepDigitado.replace("-", "");
+        //validacao de input
+        if (cepDigitado.length() == 8 && cepDigitado.matches("[0-9]+")) {
+            url = url + cepDigitado;
+        }
+        else{
+            while (cepDigitado.length() != 8 || !cepDigitado.matches("[0-9]+")) {
+                System.out.println("CEP inválido. \nDicas para buscar um CEP válido: \n- O CEP deve conter 8 dígitos numéricos. \n- Não utilize letras ou caracteres especiais, apenas (-). \n- Verifique se o CEP está completo e correto.");
+                System.out.print("\nCEP: ");
+                cepDigitado = scanner.nextLine();
+            }
+            url = url + cepDigitado;
+        }
 
         //client
         HttpClient client = HttpClient.newHttpClient();
@@ -24,7 +38,9 @@ public class BuscaCep{
             .build();
         
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        
+
+
+        System.out.println("\nBusca realizada com sucesso.\n");
         String body = response.body();
         String city = body.split("\"city\":\"")[1].split("\"")[0];
         String state = body.split("\"state\":\"")[1].split("\"")[0];
