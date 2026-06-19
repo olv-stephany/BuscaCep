@@ -6,17 +6,10 @@ import java.net.http.HttpResponse;
 import java.net.URI;
 
 public class BuscaCep{
-    public static void main(String[] args) throws Exception {
-        System.out.println("------------ BUSCA CEP ------------");
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("CEP: ");
-        String cepDigitado = scanner.nextLine();
-
-        System.out.println("\n");
+    public static void buscar(String cepDigitado, Scanner scanner) throws Exception {
         String url = "https://brasilapi.com.br/api/cep/v2/";
         cepDigitado = cepDigitado.replace("-", "");
-        //validacao de input
+       
         if (cepDigitado.length() == 8 && cepDigitado.matches("[0-9]+")) {
             url = url + cepDigitado;
         }
@@ -38,7 +31,6 @@ public class BuscaCep{
             .build();
         
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
 
         System.out.println("\nBusca realizada com sucesso.\n");
         String body = response.body();
