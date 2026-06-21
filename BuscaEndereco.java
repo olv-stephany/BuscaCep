@@ -18,41 +18,55 @@ public class BuscaEndereco {
             .build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("\nBusca realizada com sucesso.\n");
-        String body = response.body();
+        int status = response.statusCode();
 
-        System.out.println("Resultados encontrados:\n");
-        String[] resultados = body.split("\\},\\{");
+        if (status == 200){
+            String body = response.body();
 
-        for (int i = 0; i < resultados.length; i++) {
-            String resultado = resultados[i];
-            String displayName = resultado.split("\"display_name\":\"")[1].split("\"")[0];
-            System.out.println((i + 1) + ". " + displayName);
+            if (body.equals("[]")) {
+                System.out.println("Nenhum resultado encontrado para o endereço digitado.");
+                return;
+            }
+            else{
+                System.out.println("Resultados encontrados:\n");
+                String[] resultados = body.split("\\},\\{");
+
+                for (int i = 0; i < resultados.length; i++) {
+                    String resultado = resultados[i];
+                    String displayName = resultado.split("\"display_name\":\"")[1].split("\"")[0];
+                    System.out.println((i + 1) + ". " + displayName);
+                }
+
+                System.out.println("\nDigite o número do resultado desejado (ou 0 para cancelar):");
+                int opcao = scanner.nextInt();
+                scanner.nextLine();
+
+                if (opcao == 0) {
+                    System.out.println("Busca cancelada.");
+                    return; 
+                }
+
+                if (opcao < 1 || opcao > resultados.length) {
+                    System.out.println("Opção inválida.");
+                    return;
+                }
+
+                String displayName = resultados[opcao - 1].split("\"display_name\":\"")[1].split("\"")[0];
+                String lat = resultados[opcao - 1].split("\"lat\":\"")[1].split("\"")[0];
+                String lon = resultados[opcao - 1].split("\"lon\":\"")[1].split("\"")[0];
+                String addresstype = resultados[opcao - 1].split("\"addresstype\":\"")[1].split("\"")[0];
+
+                System.out.println("\nDetalhes do endereço selecionado:\n");
+                System.out.println("Nome: " + displayName);
+                System.out.println("Latitude: " + lat);
+                System.out.println("Longitude: " + lon);
+                System.out.println("Tipo de endereço: " + addresstype);
+            }
+
         }
-
-        System.out.println("\nDigite o número do resultado desejado (ou 0 para cancelar):");
-        int opcao = scanner.nextInt();
-        scanner.nextLine();
-
-        if (opcao == 0) {
-            System.out.println("Busca cancelada.");
-            return; 
-        }
-
-        if (opcao < 1 || opcao > resultados.length) {
-            System.out.println("Opção inválida.");
+        else{
+            System.out.println("\n Sem resultados para esta busca.");
             return;
-        }
-
-        String displayName = resultados[opcao - 1].split("\"display_name\":\"")[1].split("\"")[0];
-        String lat = resultados[opcao - 1].split("\"lat\":\"")[1].split("\"")[0];
-        String lon = resultados[opcao - 1].split("\"lon\":\"")[1].split("\"")[0];
-        String addresstype = resultados[opcao - 1].split("\"addresstype\":\"")[1].split("\"")[0];
-
-        System.out.println("\nDetalhes do endereço selecionado:\n");
-        System.out.println("Nome: " + displayName);
-        System.out.println("Latitude: " + lat);
-        System.out.println("Longitude: " + lon);
-        System.out.println("Tipo de endereço: " + addresstype);
+        }        
     }
 }

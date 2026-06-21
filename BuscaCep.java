@@ -32,16 +32,25 @@ public class BuscaCep{
         
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("\nBusca realizada com sucesso.\n");
-        String body = response.body();
-        String city = body.split("\"city\":\"")[1].split("\"")[0];
-        String state = body.split("\"state\":\"")[1].split("\"")[0];
-        String neighborhood = body.split("\"neighborhood\":\"")[1].split("\"")[0];
-        String street = body.split("\"street\":\"")[1].split("\"")[0];
+        int status = response.statusCode();
 
-        System.out.println("Cidade: " + city);
-        System.out.println("Estado: " + state);
-        System.out.println("Bairro: " + neighborhood);
-        System.out.println("Rua: " + street);
+        if (status == 200) {
+            System.out.println("\nBusca realizada com sucesso.\n");
+            String body = response.body();
+            String city = body.split("\"city\":\"")[1].split("\"")[0];
+            String state = body.split("\"state\":\"")[1].split("\"")[0];
+            String neighborhood = body.split("\"neighborhood\":\"")[1].split("\"")[0];
+            String street = body.split("\"street\":\"")[1].split("\"")[0];
+
+            System.out.println("Cidade: " + city);
+            System.out.println("Estado: " + state);
+            System.out.println("Bairro: " + neighborhood);
+            System.out.println("Rua: " + street);
+        }
+        else{
+            System.out.println("\n Achamo não, perdão.");
+            return;
+        }
+        
     }
 }
