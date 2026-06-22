@@ -61,6 +61,9 @@ public class BuscaEndereco {
                 System.out.println("Latitude: " + lat);
                 System.out.println("Longitude: " + lon);
                 System.out.println("Tipo de endereço: " + addresstype);
+
+                String registro = "ENDEREÇO," + displayName + "," + lat + "," + lon + "," + addresstype;
+                Historico.adicionar(registro);
             }
 
         }

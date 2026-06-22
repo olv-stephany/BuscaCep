@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -46,6 +45,11 @@ public class BuscaCep{
             System.out.println("Estado: " + state);
             System.out.println("Bairro: " + neighborhood);
             System.out.println("Rua: " + street);
+
+            //historico
+            String registro = "CEP," + cepDigitado + "," + street + "," + neighborhood + "," + city + "," + state;
+            Historico.adicionar(registro);
+        
         }
         else{
             System.out.println("\n Achamo não, perdão.");
